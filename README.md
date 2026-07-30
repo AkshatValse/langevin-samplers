@@ -101,3 +101,8 @@ figures regenerate without re-sampling. Pure NumPy, no autodiff framework.
   log-concave densities. *JRSS-B* 79(3), 651-676.
 - Durmus, A. and Moulines, É. (2017). Nonasymptotic convergence analysis for the
   unadjusted Langevin algorithm. *Annals of Applied Probability* 27(3), 1551-1587.
+
+## License
+
+MIT. Discussed at [akshatvalse.com/research](https://akshatvalse.com/research), where the
+Lifson-Jackson diffusivity check runs live.
