@@ -43,7 +43,10 @@ def _split(records, key="sampler"):
 def figure_variance(data):
     scales = np.array(data["scales"])
     by = _split(data["records"])
-    h_fine = np.logspace(np.log10(min(data["h_grid"])), np.log10(data["ula_stability_limit"] * 0.995), 400)
+    h_fine = np.logspace(np.log10(min(data["h_grid"])), np.log10(max(data["h_grid"])), 400)
+
+    h_star = data["ula_stability_limit"]
+    h_lo, h_hi = min(data["h_grid"]), max(data["h_grid"])
 
     fig, axes = plt.subplots(1, len(scales), figsize=(3.0 * len(scales), 2.8), sharex=True)
     axes = np.atleast_1d(axes)
@@ -52,12 +55,22 @@ def figure_variance(data):
         exact = np.array([ula_stationary_var(scales, h)[i] for h in h_fine])
         ax.plot(h_fine, exact, color="black", lw=1.0, label=r"ULA exact $v(h)$")
         ax.axhline(s**2, color="black", lw=0.8, ls="--", label=r"target $s^2$")
-        ax.axvline(2 * s**2, color="0.6", lw=0.8, ls=":")
+        # One vertical line, at the *global* stability limit 2 min(s^2): the
+        # narrowest direction is what actually caps the step size.
+        ax.axvline(h_star, color="0.6", lw=0.8, ls=":",
+                   label=rf"$h^*={h_star:g}$" if i == 0 else None)
+        vals = [s**2]
         for name in ("ula", "mala"):
             rs = [r for r in by[name] if not r["diverged"]]
-            ax.plot([r["h"] for r in rs], [r["measured_var"][i] for r in rs], **STYLE[name])
+            ys = [r["measured_var"][i] for r in rs]
+            vals += ys
+            ax.plot([r["h"] for r in rs], ys, **STYLE[name])
         ax.set_xscale("log")
-        ax.set_title(rf"$s={s:g}$   ($2s^2={2*s**2:g}$)")
+        ax.set_xlim(h_lo / 1.6, h_star * 1.25)
+        lo, hi = min(vals), max(vals)
+        pad = 0.12 * (hi - lo) if hi > lo else 0.1 * hi
+        ax.set_ylim(lo - pad, hi + pad)
+        ax.set_title(rf"$s={s:g}$")
         ax.set_xlabel(r"step size $h$")
         if i == 0:
             ax.set_ylabel("stationary variance")
@@ -161,7 +174,8 @@ def figure_multimodal(data):
     ax2.set_ylabel("crossing rate per step")
     ax2.set_title("Mixing is exponential in the barrier")
     ax2.legend(frameon=False, fontsize=6.5)
-    fig.suptitle("The Metropolis correction fixes bias, not mixing", y=1.05)
+    fig.suptitle("The Metropolis correction fixes bias, not mixing", y=1.02)
+    fig.tight_layout(rect=(0, 0, 1, 0.97))
     path = os.path.join(FIGURES_DIR, "fig4_multimodal.pdf")
     fig.savefig(path)
     plt.close(fig)
