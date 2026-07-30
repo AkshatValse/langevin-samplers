@@ -48,6 +48,26 @@ the AR(1) coefficients.
    Bias is polynomial in `h` and fixable; mixing is exponential in `Δ` and is
    not, and correcting the first does nothing for the second.
 
+## Results
+
+**The sampler reproduces its own exact stationary law.** Across 10 step sizes and
+3 coordinates, the measured ULA variance agrees with `v(h) = s²/(1 − h/2s²)` in
+30/30 cases to within 3 Monte Carlo standard errors, at a Monte Carlo error of
+0.14–0.29%. At `h = 0.4` — four fifths of the way to the stability limit — the
+measured variances are `[1.2479, 1.2488, 4.2085]` against exact
+`[1.25, 1.25, 4.2105]`. MALA at the same step size returns
+`[0.2494, 1.0003, 4.0075]` against the target `[0.25, 1, 4]`, and its acceptance
+rate falls from 0.999 to 0.595 over the same sweep. That is the whole trade in
+one line: ULA's error is a bias you cannot average away, MALA's is a cost you pay
+in rejected proposals.
+
+**Mixing is exponential in the barrier, and the correction does not touch it.**
+Fitting `log(crossing rate)` against `Δ = μ²/2s² − log 2` gives slope
+**−0.948** for ULA (R² = 0.998) and **−1.032** for MALA (R² = 0.999), bracketing
+the Kramers prediction of −1. By `μ = 5` (`Δ = 11.8`) ULA records zero crossings
+with all 32 chains still in the well they started in. MALA, unbiased in
+stationarity, is equally stuck — which is the point.
+
 ## Layout
 
 ```
