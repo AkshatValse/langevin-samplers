@@ -1,0 +1,28 @@
+{
+  "output": "multimodal.json",
+  "timestamp_utc": "2026-07-30T04:31:22.694862+00:00",
+  "git_commit": "9c18b879c9e44922c69e634a302b385a474d222a",
+  "seed": 20260729,
+  "python": "3.12.10",
+  "numpy": "2.5.1",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "parameters": {
+    "n_chains": 32,
+    "n_steps": 150000,
+    "thin": 1,
+    "burn_in": 0.2,
+    "scale": 1.0,
+    "dim": 2,
+    "h": 0.05,
+    "mu_grid": [
+      2.0,
+      2.5,
+      3.0,
+      3.5,
+      4.0,
+      4.5,
+      5.0
+    ],
+    "smoke": false
+  }
+}

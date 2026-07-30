@@ -1,0 +1,479 @@
+{
+  "scale": 1.0,
+  "dim": 2,
+  "h": 0.05,
+  "mu_grid": [
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0,
+    4.5,
+    5.0
+  ],
+  "arrhenius_fits": {
+    "ula": {
+      "n_points": 6,
+      "mu_used": [
+        2.0,
+        2.5,
+        3.0,
+        3.5,
+        4.0,
+        4.5
+      ],
+      "slope": -0.9477868099467578,
+      "intercept": -3.1055117560532928,
+      "r_squared": 0.9980783019559819
+    },
+    "mala": {
+      "n_points": 5,
+      "mu_used": [
+        2.0,
+        2.5,
+        3.0,
+        3.5,
+        4.0
+      ],
+      "slope": -1.0324639815465155,
+      "intercept": -2.9727327064174807,
+      "r_squared": 0.9991165888501964
+    }
+  },
+  "records": [
+    {
+      "sampler": "ula",
+      "mu": 2.0,
+      "h": 0.05,
+      "barrier": 1.3068528194400546,
+      "measured_mean": [
+        -0.004222917130482368,
+        0.0011859989373248024
+      ],
+      "measured_var": [
+        5.007038650135334,
+        1.0248358570252134
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        5.0,
+        1.0
+      ],
+      "acceptance_rate": 1.0,
+      "seconds": 2.981975300004706,
+      "occupancy_right": 0.4990604166666667,
+      "occupancy_imbalance": 0.000939583333333327,
+      "crossings_mean": 1681.875,
+      "crossings_total": 53820,
+      "crossing_rate_per_step": 0.014015741797848315,
+      "chains_that_never_crossed": 0,
+      "n_chains": 32
+    },
+    {
+      "sampler": "ula",
+      "mu": 2.5,
+      "h": 0.05,
+      "barrier": 2.4318528194400546,
+      "measured_mean": [
+        0.04019630786516691,
+        -0.0033285231347549215
+      ],
+      "measured_var": [
+        7.253378802364576,
+        1.0294243254372828
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        7.25,
+        1.0
+      ],
+      "acceptance_rate": 1.0,
+      "seconds": 2.9796712999232113,
+      "occupancy_right": 0.5085625,
+      "occupancy_imbalance": 0.008562500000000028,
+      "crossings_mean": 561.46875,
+      "crossings_total": 17967,
+      "crossing_rate_per_step": 0.004678945241210344,
+      "chains_that_never_crossed": 0,
+      "n_chains": 32
+    },
+    {
+      "sampler": "ula",
+      "mu": 3.0,
+      "h": 0.05,
+      "barrier": 3.8068528194400546,
+      "measured_mean": [
+        -0.06837973770734096,
+        -0.0013828590502361691
+      ],
+      "measured_var": [
+        10.029048380308511,
+        1.0246861560441407
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        10.0,
+        1.0
+      ],
+      "acceptance_rate": 1.0,
+      "seconds": 3.0056897001340985,
+      "occupancy_right": 0.4887255208333333,
+      "occupancy_imbalance": 0.011274479166666684,
+      "crossings_mean": 142.65625,
+      "crossings_total": 4565,
+      "crossing_rate_per_step": 0.0011888119900999175,
+      "chains_that_never_crossed": 0,
+      "n_chains": 32
+    },
+    {
+      "sampler": "ula",
+      "mu": 3.5,
+      "h": 0.05,
+      "barrier": 5.431852819440055,
+      "measured_mean": [
+        -0.3586451716833065,
+        0.003958596117496528
+      ],
+      "measured_var": [
+        13.157910373213904,
+        1.0214295717908697
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        13.25,
+        1.0
+      ],
+      "acceptance_rate": 1.0,
+      "seconds": 2.9867005001287907,
+      "occupancy_right": 0.44904192708333335,
+      "occupancy_imbalance": 0.05095807291666665,
+      "crossings_mean": 27.6875,
+      "crossings_total": 886,
+      "crossing_rate_per_step": 0.0002307310894257452,
+      "chains_that_never_crossed": 0,
+      "n_chains": 32
+    },
+    {
+      "sampler": "ula",
+      "mu": 4.0,
+      "h": 0.05,
+      "barrier": 7.306852819440055,
+      "measured_mean": [
+        -1.5718841374753183,
+        -0.0031341425422818582
+      ],
+      "measured_var": [
+        14.601580567702023,
+        1.0253719042004106
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        17.0,
+        1.0
+      ],
+      "acceptance_rate": 1.0,
+      "seconds": 2.9819292998872697,
+      "occupancy_right": 0.30394166666666667,
+      "occupancy_imbalance": 0.19605833333333333,
+      "crossings_mean": 4.5,
+      "crossings_total": 144,
+      "crossing_rate_per_step": 3.750031250260419e-05,
+      "chains_that_never_crossed": 5,
+      "n_chains": 32
+    },
+    {
+      "sampler": "ula",
+      "mu": 4.5,
+      "h": 0.05,
+      "barrier": 9.431852819440055,
+      "measured_mean": [
+        -3.4837425290093122,
+        -0.0018475929578387418
+      ],
+      "measured_var": [
+        9.093596371181029,
+        1.0188729925687203
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        21.25,
+        1.0
+      ],
+      "acceptance_rate": 1.0,
+      "seconds": 3.011626600055024,
+      "occupancy_right": 0.11312786458333333,
+      "occupancy_imbalance": 0.38687213541666665,
+      "crossings_mean": 0.84375,
+      "crossings_total": 27,
+      "crossing_rate_per_step": 7.031308594238285e-06,
+      "chains_that_never_crossed": 21,
+      "n_chains": 32
+    },
+    {
+      "sampler": "ula",
+      "mu": 5.0,
+      "h": 0.05,
+      "barrier": 11.806852819440055,
+      "measured_mean": [
+        -5.003872820937041,
+        0.0029668477257180892
+      ],
+      "measured_var": [
+        1.021503178465695,
+        1.0260837324473708
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        26.0,
+        1.0
+      ],
+      "acceptance_rate": 1.0,
+      "seconds": 2.9775674999691546,
+      "occupancy_right": 0.0,
+      "occupancy_imbalance": 0.5,
+      "crossings_mean": 0.0,
+      "crossings_total": 0,
+      "crossing_rate_per_step": 0.0,
+      "chains_that_never_crossed": 32,
+      "n_chains": 32
+    },
+    {
+      "sampler": "mala",
+      "mu": 2.0,
+      "h": 0.05,
+      "barrier": 1.3068528194400546,
+      "measured_mean": [
+        -0.041018550879696615,
+        0.0008371203161112025
+      ],
+      "measured_var": [
+        4.9849177660074995,
+        1.0018731097340228
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        5.0,
+        1.0
+      ],
+      "acceptance_rate": 0.9956154166666666,
+      "seconds": 6.347292199963704,
+      "occupancy_right": 0.48967369791666665,
+      "occupancy_imbalance": 0.01032630208333335,
+      "crossings_mean": 1565.34375,
+      "crossings_total": 50091,
+      "crossing_rate_per_step": 0.01304463995533296,
+      "chains_that_never_crossed": 0,
+      "n_chains": 32
+    },
+    {
+      "sampler": "mala",
+      "mu": 2.5,
+      "h": 0.05,
+      "barrier": 2.4318528194400546,
+      "measured_mean": [
+        0.041508692189550084,
+        -0.002189164417734457
+      ],
+      "measured_var": [
+        7.2333305594086,
+        1.0048506587875237
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        7.25,
+        1.0
+      ],
+      "acceptance_rate": 0.995790625,
+      "seconds": 6.341212200000882,
+      "occupancy_right": 0.5081794270833333,
+      "occupancy_imbalance": 0.008179427083333302,
+      "crossings_mean": 476.5625,
+      "crossings_total": 15250,
+      "crossing_rate_per_step": 0.003971387261560513,
+      "chains_that_never_crossed": 0,
+      "n_chains": 32
+    },
+    {
+      "sampler": "mala",
+      "mu": 3.0,
+      "h": 0.05,
+      "barrier": 3.8068528194400546,
+      "measured_mean": [
+        -0.0034844270070380624,
+        -0.00015072983749472865
+      ],
+      "measured_var": [
+        9.966463248081583,
+        0.9999047209212008
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        10.0,
+        1.0
+      ],
+      "acceptance_rate": 0.9959225,
+      "seconds": 6.309688000008464,
+      "occupancy_right": 0.49998880208333335,
+      "occupancy_imbalance": 1.1197916666649821e-05,
+      "crossings_mean": 124.875,
+      "crossings_total": 3996,
+      "crossing_rate_per_step": 0.0010406336719472663,
+      "chains_that_never_crossed": 0,
+      "n_chains": 32
+    },
+    {
+      "sampler": "mala",
+      "mu": 3.5,
+      "h": 0.05,
+      "barrier": 5.431852819440055,
+      "measured_mean": [
+        -0.015039216770372048,
+        -0.0025343684000139455
+      ],
+      "measured_var": [
+        13.229274973315771,
+        1.0008778115550458
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        13.25,
+        1.0
+      ],
+      "acceptance_rate": 0.99603875,
+      "seconds": 6.30084879999049,
+      "occupancy_right": 0.4977713541666667,
+      "occupancy_imbalance": 0.0022286458333333203,
+      "crossings_mean": 25.0625,
+      "crossings_total": 802,
+      "crossing_rate_per_step": 0.00020885590713255945,
+      "chains_that_never_crossed": 0,
+      "n_chains": 32
+    },
+    {
+      "sampler": "mala",
+      "mu": 4.0,
+      "h": 0.05,
+      "barrier": 7.306852819440055,
+      "measured_mean": [
+        0.39397450809350637,
+        0.0019357506014445974
+      ],
+      "measured_var": [
+        16.887190800494547,
+        0.9994444203787117
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        17.0,
+        1.0
+      ],
+      "acceptance_rate": 0.9960325,
+      "seconds": 6.3636753999162465,
+      "occupancy_right": 0.5491369791666667,
+      "occupancy_imbalance": 0.049136979166666706,
+      "crossings_mean": 3.0,
+      "crossings_total": 96,
+      "crossing_rate_per_step": 2.500020833506946e-05,
+      "chains_that_never_crossed": 6,
+      "n_chains": 32
+    },
+    {
+      "sampler": "mala",
+      "mu": 4.5,
+      "h": 0.05,
+      "barrier": 9.431852819440055,
+      "measured_mean": [
+        -3.2923556342030134,
+        0.0007470755184888023
+      ],
+      "measured_var": [
+        10.424463979433396,
+        1.002502358569636
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        21.25,
+        1.0
+      ],
+      "acceptance_rate": 0.9960552083333334,
+      "seconds": 6.3405589000321925,
+      "occupancy_right": 0.13424088541666668,
+      "occupancy_imbalance": 0.3657591145833333,
+      "crossings_mean": 0.125,
+      "crossings_total": 4,
+      "crossing_rate_per_step": 1.0416753472945607e-06,
+      "chains_that_never_crossed": 28,
+      "n_chains": 32
+    },
+    {
+      "sampler": "mala",
+      "mu": 5.0,
+      "h": 0.05,
+      "barrier": 11.806852819440055,
+      "measured_mean": [
+        -5.00128293488418,
+        -0.001358482550373136
+      ],
+      "measured_var": [
+        0.9947851184724618,
+        0.9993287702411998
+      ],
+      "target_mean": [
+        0.0,
+        0.0
+      ],
+      "target_var": [
+        26.0,
+        1.0
+      ],
+      "acceptance_rate": 0.99610125,
+      "seconds": 6.375832800054923,
+      "occupancy_right": 0.0,
+      "occupancy_imbalance": 0.5,
+      "crossings_mean": 0.0,
+      "crossings_total": 0,
+      "crossing_rate_per_step": 0.0,
+      "chains_that_never_crossed": 32,
+      "n_chains": 32
+    }
+  ]
+}
