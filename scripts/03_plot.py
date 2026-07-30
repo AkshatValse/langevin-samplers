@@ -40,6 +40,15 @@ def _split(records, key="sampler"):
     return {n: [r for r in records if r[key] == n] for n in ("ula", "mala")}
 
 
+def _save(fig, stem):
+    """Save a figure as PDF (for print) and PNG (for inline rendering)."""
+    path = os.path.join(FIGURES_DIR, stem + ".pdf")
+    fig.savefig(path)
+    fig.savefig(os.path.join(FIGURES_DIR, stem + ".png"), dpi=200)
+    plt.close(fig)
+    return path
+
+
 def figure_variance(data):
     scales = np.array(data["scales"])
     by = _split(data["records"])
@@ -76,10 +85,7 @@ def figure_variance(data):
             ax.set_ylabel("stationary variance")
             ax.legend(frameon=False, fontsize=7, loc="upper left")
     fig.suptitle("ULA over-disperses by exactly $h/2 + O(h^2)$ per coordinate; MALA does not", y=1.04)
-    path = os.path.join(FIGURES_DIR, "fig1_variance_vs_h.pdf")
-    fig.savefig(path)
-    plt.close(fig)
-    return path
+    return _save(fig, "fig1_variance_vs_h")
 
 
 def figure_w2(data):
@@ -104,10 +110,7 @@ def figure_w2(data):
     ax.set_ylabel(r"$W_2(\hat\pi, \pi)$")
     ax.set_title("ULA bias is first order in $h$; MALA sits at the Monte Carlo floor")
     ax.legend(frameon=False, fontsize=7)
-    path = os.path.join(FIGURES_DIR, "fig2_w2_scaling.pdf")
-    fig.savefig(path)
-    plt.close(fig)
-    return path
+    return _save(fig, "fig2_w2_scaling")
 
 
 def figure_cost(data):
@@ -133,10 +136,7 @@ def figure_cost(data):
     ax2.set_xlabel(r"step size $h$")
     ax2.set_ylabel("MALA acceptance rate")
     ax2.set_title("The price of the correction")
-    path = os.path.join(FIGURES_DIR, "fig3_cost.pdf")
-    fig.savefig(path)
-    plt.close(fig)
-    return path
+    return _save(fig, "fig3_cost")
 
 
 def figure_multimodal(data):
@@ -176,10 +176,7 @@ def figure_multimodal(data):
     ax2.legend(frameon=False, fontsize=6.5)
     fig.suptitle("The Metropolis correction fixes bias, not mixing", y=1.02)
     fig.tight_layout(rect=(0, 0, 1, 0.97))
-    path = os.path.join(FIGURES_DIR, "fig4_multimodal.pdf")
-    fig.savefig(path)
-    plt.close(fig)
-    return path
+    return _save(fig, "fig4_multimodal")
 
 
 def validation_table(data):
