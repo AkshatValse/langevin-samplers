@@ -1,11 +1,11 @@
 {
   "output": "gaussian_bias.json",
-  "timestamp_utc": "2026-07-30T04:30:15.713618+00:00",
-  "git_commit": "9c18b879c9e44922c69e634a302b385a474d222a",
+  "timestamp_utc": "2026-10-26T14:21:32.983030+00:00",
+  "git_commit": "6ee068edfaf3d4d6f26baac7937357e40e06f431",
   "seed": 20260729,
-  "python": "3.12.10",
+  "python": "3.14.7",
   "numpy": "2.5.1",
-  "platform": "Windows-11-10.0.26200-SP0",
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
   "parameters": {
     "n_chains": 128,
     "n_steps": 200000,

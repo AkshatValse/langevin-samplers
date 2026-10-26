@@ -53,6 +53,8 @@ The Gaussian experiment compares 10 step sizes and 3 coordinates with
 `v(h) = s²/(1 − h/2s²)`. Variance standard errors use independent-chain averages of
 the squared centered observable, preserving its temporal correlation. They measure
 Monte Carlo sampling error, not shared initialization bias or convergence to stationarity.
+In the saved full run, all 30 coordinate-step-size cases lie within three estimated
+variance standard errors; the relative standard errors range from 0.11% to 0.85%.
 At `h = 0.4`, four fifths of the way to the stability limit, the measured variances are
 `[1.2479, 1.2488, 4.2085]` against exact `[1.25, 1.25, 4.2105]`. MALA at the same step
 size returns `[0.2494, 1.0003, 4.0075]` against the target `[0.25, 1, 4]`, and its
