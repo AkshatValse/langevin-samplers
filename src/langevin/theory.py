@@ -1,7 +1,7 @@
-"""Closed-form reference quantities for the discretized chains.
+"""Gaussian reference laws and a large-separation mixture-barrier approximation.
 
-Everything here is exact.  These are the answers the simulations in
-``scripts/`` are checked against.
+Gaussian stationary quantities are exact. The mixture barrier is explicitly
+asymptotic; it is used to compare the measured crossing rates across separations.
 """
 
 import numpy as np
@@ -57,20 +57,20 @@ def ula_variance_bias(scales, h):
 
 
 def mixture_barrier(mu, scale=1.0):
-    """Log-density barrier between the wells of the two-component mixture.
+    """Large-separation approximation to the mixture's log-density barrier.
 
     Along the separating coordinate the mixture log-density at a mode is
     ``log(1/2) - log Z`` up to ``O(e^{-2mu^2/s^2})``, while at the saddle
     ``x = 0`` both components contribute equally, giving ``-mu^2/(2 s^2) - log Z``.
-    The barrier is therefore
+    Approximating the actual modes by the component centers gives
 
         Delta(mu) = mu^2 / (2 s^2) - log 2,
 
-    and Kramers' law predicts a mean crossing rate scaling like
-    ``exp(-Delta)``, i.e. mixing time exponential in the barrier while the
-    discretization bias of stage 01 is only polynomial in ``h``.  The two
-    failure modes are independent, and only one of them is fixed by a
-    Metropolis correction.
+    The exact modes are slightly shifted toward zero. Kramers-type asymptotics
+    predict the leading exponential ``exp(-Delta)`` for transitions, with a
+    separation-dependent prefactor. The discrete experiment counts sign
+    crossings (including recrossings), so its fitted slope is a numerical
+    comparison, not an exact transition-rate identity.
     """
     mu = np.asarray(mu, dtype=float)
     return mu**2 / (2.0 * float(scale) ** 2) - np.log(2.0)

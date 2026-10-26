@@ -8,6 +8,7 @@ Usage:  uv run python scripts/03_plot.py
 
 import os
 import sys
+import hashlib
 
 import matplotlib
 
@@ -18,7 +19,7 @@ import numpy as np  # noqa: E402
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src"))
 
-from langevin.provenance import FIGURES_DIR, ensure_dirs, load_json, save_json  # noqa: E402
+from langevin.provenance import FIGURES_DIR, RESULTS_DIR, ensure_dirs, load_json, save_json  # noqa: E402
 from langevin.theory import ula_stationary_var, ula_w2_to_target  # noqa: E402
 
 plt.rcParams.update({
@@ -107,7 +108,7 @@ def figure_w2(data):
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlabel(r"step size $h$")
-    ax.set_ylabel(r"$W_2(\hat\pi, \pi)$")
+    ax.set_ylabel("zero-mean diagonal-Gaussian $W_2$ proxy")
     ax.set_title("ULA bias is first order in $h$; MALA sits at the Monte Carlo floor")
     ax.legend(frameon=False, fontsize=7)
     return _save(fig, "fig2_w2_scaling")
@@ -170,11 +171,11 @@ def figure_multimodal(data):
         ax2.plot(d, np.exp(fit["intercept"] + fit["slope"] * d), color="0.55", lw=0.9, ls="--",
                  label=rf"fit: slope $={fit['slope']:.2f}$")
     ax2.set_yscale("log")
-    ax2.set_xlabel(r"barrier $\Delta = \mu^2/2s^2 - \log 2$")
+    ax2.set_xlabel(r"approx. barrier $\Delta = \mu^2/2s^2 - \log 2$")
     ax2.set_ylabel("crossing rate per step")
-    ax2.set_title("Mixing is exponential in the barrier")
+    ax2.set_title("Sign crossings decrease with the barrier")
     ax2.legend(frameon=False, fontsize=6.5)
-    fig.suptitle("The Metropolis correction fixes bias, not mixing", y=1.02)
+    fig.suptitle("The Metropolis correction does not remove metastability here", y=1.02)
     fig.tight_layout(rect=(0, 0, 1, 0.97))
     return _save(fig, "fig4_multimodal")
 
@@ -195,17 +196,22 @@ def validation_table(data):
         for i in range(len(scales)):
             meas, ex = r["measured_var"][i], exact[i]
             rel = (meas - ex) / ex
-            mc = r["mc_rel_err_on_var"][i]
-            ok = abs(rel) <= 3.0 * mc
+            se = r["mc_se_on_var"][i]
+            mc = se / ex
+            ok = bool(np.isfinite(se) and abs(meas - ex) <= 3.0 * se)
             rows.append({"h": r["h"], "coord": i, "measured": meas, "exact": float(ex),
-                         "rel_diff": float(rel), "mc_rel_err": float(mc), "within_3sigma": bool(ok)})
+                         "rel_diff": float(rel), "mc_std_err": se,
+                         "mc_rel_err": float(mc), "within_3sigma": ok})
             print(f"{r['h']:8.4f}  {i:5d}  {meas:10.5f}  {ex:10.5f}  "
                   f"{rel:+9.2%}  {mc:9.2%}  {'yes' if ok else 'NO':>6}")
     n_ok = sum(x["within_3sigma"] for x in rows)
     print(f"\n{n_ok}/{len(rows)} coordinate-step-size pairs agree with the exact "
           f"ULA law within 3 Monte Carlo standard errors.")
+    with open(os.path.join(RESULTS_DIR, "gaussian_bias.json"), "rb") as source:
+        source_hash = hashlib.sha256(source.read()).hexdigest()
     save_json("ula_validation.json", {"rows": rows, "n_within_3sigma": n_ok, "n_total": len(rows)},
-              {"source": "gaussian_bias.json", "criterion": "|rel_diff| <= 3 * mc_rel_err"}, seed=0)
+              {"source": "gaussian_bias.json", "source_sha256": source_hash,
+               "criterion": "|measured - exact| <= 3 * independent-chain variance SE"}, seed=0)
     return n_ok, len(rows)
 
 

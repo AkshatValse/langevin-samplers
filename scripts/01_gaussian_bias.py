@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 from langevin.diagnostics import (  # noqa: E402
     effective_sample_size,
     moment_summary,
-    var_relative_mc_error,
+    variance_mc_standard_error,
 )
 from langevin.provenance import save_json  # noqa: E402
 from langevin.samplers import SAMPLERS  # noqa: E402
@@ -39,7 +39,7 @@ from langevin.theory import (  # noqa: E402
 )
 
 SEED = 20260729
-SCALES = [0.5, 1.0, 2.0]  # 4:1 conditioning; stability limit is 2*min(s^2) = 0.5
+SCALES = [0.5, 1.0, 2.0]  # 4:1 scale ratio, 16:1 covariance conditioning
 N_H = 10
 H_MIN, H_MAX = 5e-3, 4e-1
 
@@ -78,12 +78,14 @@ def run(config, smoke):
             mean, var = moment_summary(samples)
             if samples.size:
                 ess = effective_sample_size(samples)
+                var_se = variance_mc_standard_error(samples)
                 w2_target = gaussian_w2(var, target.reference_var)
             else:
                 ess = np.full(target.dim, np.nan)
+                var_se = np.full(target.dim, np.nan)
                 w2_target = float("nan")
 
-            grad_evals = config["n_steps"] * config["n_chains"] * info["grad_evals_per_step"]
+            grad_evals = info["grad_evals"]
             rec = {
                 "sampler": name,
                 "h": float(h),
@@ -93,8 +95,10 @@ def run(config, smoke):
                 "ula_exact_var": ula_stationary_var(SCALES, float(h)).tolist(),
                 "w2_to_target": w2_target,
                 "ess": ess.tolist(),
+                "grad_evals": grad_evals,
                 "ess_per_grad_eval": (ess / grad_evals).tolist(),
-                "mc_rel_err_on_var": var_relative_mc_error(ess).tolist(),
+                "mc_se_on_var": var_se.tolist(),
+                "mc_rel_err_on_var": (var_se / var).tolist(),
                 "acceptance_rate": info["acceptance_rate"],
                 "diverged": info["diverged"],
                 "seconds": elapsed,
@@ -111,6 +115,7 @@ def run(config, smoke):
         "scales": SCALES,
         "h_grid": h_grid.tolist(),
         "ula_stability_limit": float(h_star),
+        "variance_mc_error_method": "independent-chain squared-observable influence",
         "records": records,
     }
     params = dict(config, scales=SCALES, h_grid=h_grid.tolist(), smoke=smoke)

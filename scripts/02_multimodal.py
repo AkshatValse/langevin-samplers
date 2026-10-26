@@ -1,22 +1,22 @@
-"""Stage 02: mixing time is exponential in the barrier, and the correction does not help.
+"""Stage 02: compare metastability under ULA and MALA as separation grows.
 
 Stage 01 isolates discretization bias with mixing held easy.  This stage
 isolates the opposite failure.  On the separated mixture
 
     pi = 0.5 N(-mu e_0, s^2 I) + 0.5 N(+mu e_0, s^2 I)
 
-the log-density barrier between the wells is ``Delta(mu) = mu^2/(2 s^2) - log 2``,
-and Kramers' law predicts a mean crossing rate scaling like ``exp(-Delta)``.  So
-the barrier height, not the step size, is swept here: every chain starts in the
-left well and the run reports how often it escapes.
+the large-separation barrier approximation is ``Delta(mu) = mu^2/(2 s^2) - log 2``.
+Kramers-type asymptotics predict a leading exponential ``exp(-Delta)``, with a
+separation-dependent prefactor. We sweep this approximate barrier at fixed step
+size and count sign crossings, including recrossings, after burn-in.
 
-The point of the comparison is that MALA's correction does nothing for this.
+The point of the comparison is that MALA's correction does not remove metastability.
 MALA is unbiased *in stationarity*, and a chain that has not crossed is nowhere
 near stationarity; at large ``mu`` both samplers simply report the mode they
-were started in.  Bias is polynomial in ``h`` and fixable; mixing is exponential
-in ``Delta`` and is not.
+were started in. Correcting discretization bias does not ensure rapid mixing.
 
-Runs unthinned so crossings are counted exactly rather than sampled.
+Runs unthinned so every sign change at a simulated step is counted. Crossings
+during burn-in and between discrete steps are not measured.
 
 Writes ``results/multimodal.json`` plus its sidecar.
 
@@ -66,7 +66,7 @@ def crossing_stats(samples, target, n_kept):
 
 
 def arrhenius_fit(records, sampler):
-    """Fit ``log(rate) = a - b * Delta``; Kramers predicts ``b ~ 1``."""
+    """Fit ``log(rate) = a - b * Delta``; compare with leading exponential b ~ 1."""
     pts = [
         r for r in records
         if r["sampler"] == sampler and r["crossings_total"] >= MIN_CROSSINGS_TO_FIT
@@ -137,7 +137,7 @@ def run(config, smoke):
         if f:
             print(f"\n{s.upper()} Arrhenius fit over mu={f['mu_used']}: "
                   f"log(rate) = {f['intercept']:.2f} - {-f['slope']:.3f}*Delta   "
-                  f"(R^2={f['r_squared']:.4f}; Kramers predicts slope -1)")
+                  f"(R^2={f['r_squared']:.4f}; leading exponential suggests slope near -1)")
         else:
             print(f"\n{s.upper()}: too few crossing-rich points to fit.")
 

@@ -5,6 +5,7 @@ from langevin.diagnostics import (
     integrated_autocorr_time,
     moment_summary,
     var_relative_mc_error,
+    variance_mc_standard_error,
 )
 from langevin.samplers import SAMPLERS, mala, ula
 from langevin.targets import GaussianTarget, TwoComponentMixture
@@ -31,4 +32,5 @@ __all__ = [
     "integrated_autocorr_time",
     "moment_summary",
     "var_relative_mc_error",
+    "variance_mc_standard_error",
 ]

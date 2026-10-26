@@ -38,10 +38,11 @@ def git_commit():
         return "unknown"
     sha = out.stdout.strip()
     try:
-        # Tracked modifications only: freshly written, not-yet-committed outputs
-        # in results/ are not a reason to call the *code* state dirty.
+        # Generated results/figures do not alter the source revision. Include
+        # untracked source files, so new code cannot silently inherit a clean SHA.
         dirty = subprocess.run(
-            ["git", "-C", PROJECT_ROOT, "status", "--porcelain", "--untracked-files=no"],
+            ["git", "-C", PROJECT_ROOT, "status", "--porcelain", "--untracked-files=all",
+             "--", ".", ":(exclude)results/", ":(exclude)figures/"],
             capture_output=True,
             text=True,
             timeout=10,

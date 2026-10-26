@@ -18,6 +18,8 @@ def _prepare(x0, h, n_steps, burn_in, thin):
         raise ValueError("burn_in must lie in [0, 1)")
     if thin < 1:
         raise ValueError("thin must be at least 1")
+    if not isinstance(n_steps, (int, np.integer)) or n_steps < 0:
+        raise ValueError("n_steps must be a nonnegative integer")
     return x, int(burn_in * n_steps)
 
 
@@ -26,9 +28,9 @@ def ula(target, h, n_steps, x0, rng, burn_in=0.2, thin=1):
 
         X_{k+1} = X_k + h grad log pi(X_k) + sqrt(2h) xi_k,   xi_k ~ N(0, I).
 
-    The chain is ergodic but its invariant law ``pi_h`` is *not* ``pi``.  The
-    resulting O(h) bias is the quantity this repository measures; for Gaussian
-    targets ``pi_h`` is known exactly (:func:`langevin.theory.ula_stationary_var`).
+    When the discretized chain is ergodic, its invariant law ``pi_h`` generally
+    differs from ``pi``. For the stable Gaussian cases studied here the bias
+    is O(h) and ``pi_h`` is known exactly (:func:`langevin.theory.ula_stationary_var`).
 
     For step sizes past the stability limit the iteration diverges rather than
     equilibrating; ``info["diverged"]`` reports this instead of returning
@@ -38,9 +40,11 @@ def ula(target, h, n_steps, x0, rng, burn_in=0.2, thin=1):
     sqrt_2h = np.sqrt(2.0 * h)
     kept = []
     diverged = False
+    n_grad_evals = 0
 
     for k in range(n_steps):
         x = x + h * target.grad_log_prob(x) + sqrt_2h * rng.standard_normal(x.shape)
+        n_grad_evals += x.shape[0]
         if not np.all(np.isfinite(x)):
             diverged = True
             break
@@ -54,7 +58,7 @@ def ula(target, h, n_steps, x0, rng, burn_in=0.2, thin=1):
         "burn_in": float(burn_in),
         "thin": int(thin),
         "acceptance_rate": 1.0,
-        "grad_evals_per_step": 1,
+        "grad_evals": n_grad_evals,
         "diverged": bool(diverged),
     }
     if diverged or not kept:
@@ -82,6 +86,8 @@ def mala(target, h, n_steps, x0, rng, burn_in=0.2, thin=1):
     four_h = 4.0 * h
 
     grad = target.grad_log_prob(x)
+    # Count individual-chain evaluations, including this cached initial score.
+    n_grad_evals = n_chains
     logp = target.log_prob(x)
     kept = []
     n_accept = 0
@@ -90,6 +96,7 @@ def mala(target, h, n_steps, x0, rng, burn_in=0.2, thin=1):
     for k in range(n_steps):
         y = x + h * grad + sqrt_2h * rng.standard_normal(x.shape)
         grad_y = target.grad_log_prob(y)
+        n_grad_evals += n_chains
         logp_y = target.log_prob(y)
 
         # Forward and reverse proposal log-densities, up to the shared
@@ -120,7 +127,7 @@ def mala(target, h, n_steps, x0, rng, burn_in=0.2, thin=1):
         "burn_in": float(burn_in),
         "thin": int(thin),
         "acceptance_rate": n_accept / n_proposed if n_proposed else float("nan"),
-        "grad_evals_per_step": 2,
+        "grad_evals": n_grad_evals,
         "diverged": False,
     }
     if not kept:

@@ -30,10 +30,10 @@ def integrated_autocorr_time(chain):
     if chain.size < 4 or np.allclose(chain, chain[0]):
         return float(chain.size)
     rho = _autocorr(chain)
-    n_pairs = (rho.size - 1) // 2
+    n_pairs = rho.size // 2
     if n_pairs < 1:
         return 1.0
-    gamma = rho[1 : 2 * n_pairs + 1 : 2] + rho[2 : 2 * n_pairs + 2 : 2]
+    gamma = rho[: 2 * n_pairs : 2] + rho[1 : 2 * n_pairs : 2]
     # Truncate at the first non-positive pair sum.
     nonpos = np.nonzero(gamma <= 0.0)[0]
     cut = nonpos[0] if nonpos.size else gamma.size
@@ -42,7 +42,7 @@ def integrated_autocorr_time(chain):
         return 1.0
     # Enforce the monotone-decreasing property the estimator assumes.
     gamma = np.minimum.accumulate(gamma)
-    tau = 1.0 + 2.0 * float(np.sum(gamma))
+    tau = -1.0 + 2.0 * float(np.sum(gamma))
     return max(tau, 1.0)
 
 
@@ -87,11 +87,37 @@ def moment_summary(samples):
 
 
 def var_relative_mc_error(n_eff):
-    """Relative standard error of a variance estimate from ``n_eff`` draws.
+    """Gaussian variance-error approximation using the squared observable's ESS.
 
     For Gaussian data ``Var(s^2) / sigma^4 = 2 / (n - 1)``, so the relative
-    error is ``sqrt(2 / n_eff)``.  Used to decide whether a measured bias is
-    resolvable at the smallest step sizes rather than assuming it is.
+    error is ``sqrt(2 / n_eff)``. For correlated draws, ``n_eff`` must describe
+    ``(X - E[X])**2``, not ``X``. The experiments instead estimate variance
+    uncertainty from independent chains with :func:`variance_mc_standard_error`.
     """
     n_eff = np.asarray(n_eff, dtype=float)
     return np.sqrt(2.0 / np.maximum(n_eff - 1.0, 1.0))
+
+
+def variance_mc_standard_error(samples):
+    """Monte Carlo SE of the pooled variance, using independent chains.
+
+    Average the variance influence observable ``(X - pooled_mean)**2`` within
+    each chain, then estimate its sampling error across chains. Each chain is
+    one independent replication, so temporal correlation of the squared draws
+    is retained without substituting the mean's ESS. The ``N/(N-1)`` factor
+    matches :func:`moment_summary`'s pooled ``ddof=1`` variance.
+
+    This is an asymptotic influence estimate: it requires independent chains,
+    finite fourth moments, and enough replications. It measures sampling error,
+    not common initialization bias or a failure to reach stationarity.
+    """
+    samples = np.asarray(samples, dtype=float)
+    if samples.ndim != 3 or samples.shape[0] < 2 or samples.shape[1] < 2:
+        raise ValueError("samples must have shape (n_kept >= 2, n_chains >= 2, dim)")
+    if not np.all(np.isfinite(samples)):
+        raise ValueError("samples must be finite")
+    n_kept, n_chains, _ = samples.shape
+    mean = samples.mean(axis=(0, 1))
+    chain_influences = np.mean((samples - mean) ** 2, axis=0)
+    n_total = n_kept * n_chains
+    return (n_total / (n_total - 1)) * chain_influences.std(axis=0, ddof=1) / np.sqrt(n_chains)
